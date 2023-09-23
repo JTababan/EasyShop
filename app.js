@@ -6,7 +6,8 @@ const app = express();
 const loginRoute = require('./routes/login')
 const signUpRoute = require('./routes/signup')
 const categoryRoute = require('./routes/category')
-const {router, productsDataArrayToObject} = require('./routes/product')
+const {router , productsDataArrayToObject} = require('./routes/product')
+const cartRouter = require('./routes/cart')
 const bodyParser = require('body-parser')
 const session = require('express-session');
 
@@ -29,6 +30,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
+
 
 app.get('/' , (req, res) => {
     
@@ -54,14 +56,18 @@ app.get('/' , (req, res) => {
             
             const userEmail = req.session.userEmail;
             const fetureProducts =  productsDataArrayToObject(featured);
-           
-            res.render('index', {products: fetureProducts, categories : categoriesResult , userEmail: userEmail});
+            
+            
+            const cartCount = cartRouter.getCartCount(req.app, req.session.user)
+
+            res.render('index', {products: fetureProducts, categories : categoriesResult , userEmail: userEmail, cartItems: cartCount});
         })
  
-    });
+});
     
-    
-
+app.get('/shippinginfo', (req, res) => {
+    res.render('shippinginfo');
+});
 
 app.get('/about', (req, res)=>{
     res.send("About")
@@ -71,13 +77,14 @@ app.use('/products', router)
 app.use('/category', categoryRoute.router)
 app.use('/login', loginRoute.router )
 app.use('/signup', signUpRoute.router)
-
+app.use('/cart', cartRouter.router)
 
 app.get('/logout', (req, res) => {
     req.session.destroy(function(err) {
         res.redirect('/')
     })
 })
+
 
 
 low(adapter).then(function (db) {
@@ -89,12 +96,5 @@ low(adapter).then(function (db) {
     })
     
 })
-
-
-
-// ____________________SHIPPING INFO____________________
-app.get('/shippinginfo', (req, res) => {
-    res.render('shippinginfo');
-});
 
 
