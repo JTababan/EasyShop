@@ -33,6 +33,9 @@
     padding: 5px 20px 15px 20px;
     border: 1px solid lightgrey;
     border-radius: 3px;
+    margin: 50px;
+    align-self: center;
+    justify-self: center;
   }
   
   input[type=text] {
@@ -83,4 +86,25 @@
     .col-25 {
       margin-bottom: 20px;
     }
+  }
+
+  .CheckoutBut{
+    display: flex;
+    align-self: center !important;
+    justify-self: center !important;
+    text-align: center;
+    
+  }
+  .shippingCon{
+    margin: 50px;
+    display: flex;
+    justify-content: center;
+  }
+  .innerShipping{
+    display: flex;
+    justify-content: center;
+  }
+  .ShippingForm{
+    display: flex;
+    flex-direction: column;
   }
