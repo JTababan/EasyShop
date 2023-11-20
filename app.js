@@ -54,7 +54,8 @@ app.get('/' , (req, res) => {
                 }
             }
             
-            const userEmail = req.session.userEmail;
+            const userEmail = req.session.userEmail
+            app.set('userEmail', userEmail)
             const fetureProducts =  productsDataArrayToObject(featured);
             
             
@@ -65,8 +66,17 @@ app.get('/' , (req, res) => {
  
 });
     
-app.get('/shippinginfo', (req, res) => {
-    res.render('shippinginfo');
+app.get('/shipping', (req, res) => {
+    
+    if(!req.session.user){
+        res.redirect('/login')
+        return
+    }
+
+    categoriesResult = app.get('categories')
+    userEmail = app.get('userEmail')
+
+    res.render('shippinginfo', {categories : categoriesResult , userEmail: userEmail});
 });
 
 app.get('/about', (req, res)=>{
@@ -79,7 +89,7 @@ app.use('/login', loginRoute.router )
 app.use('/signup', signUpRoute.router)
 app.use('/cart', cartRouter.router)
 
-app.get('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
     req.session.destroy(function(err) {
         res.redirect('/')
     })
